@@ -37,6 +37,7 @@ namespace LogicSatelites.Behaviours
             }
             base.SetTarget(target);
 
+
             GetPrefabStrings();
             targetCraft = target.GetComponent<Clustercraft>();
             if (targetCraft == null && target.GetComponent<RocketControlStation>() != null)
@@ -58,15 +59,11 @@ namespace LogicSatelites.Behaviours
 
         private void ClearModules()
         {
-            var Content = transform.Find("ScrollSetup/ScrollRect/Content/ModuleWidget");
-            while (Content != null)
-            {
-
-            }
-            Transform Content = transform.Find("ScrollSetup/ScrollRect/Content"); Util.KDestroyGameObject(
             foreach (KeyValuePair<ISatelliteCarrier, HierarchyReferences> modulePanel in this.modulePanels)
                 Util.KDestroyGameObject(modulePanel.Value.gameObject);
             modulePanels.Clear();
+
+            //Content = GameObject.Find("ScrollSetup/ScrollRect/Content/ModuleWidget");
         }
 
         private void BuildModules()
@@ -82,7 +79,6 @@ namespace LogicSatelites.Behaviours
                     this.RefreshModulePanel(carrierInstance);
                 }
             }
-            Debug.Log(modulePanels.Count);
         }
 
         protected override void OnShow(bool show)
@@ -92,9 +88,13 @@ namespace LogicSatelites.Behaviours
         }
         private void GetPrefabStrings()
         {
-            Transform Content = transform.Find("ScrollSetup/ScrollRect/Content");
-            moduleContentContainer = Content.gameObject;
-            modulePanelPrefab = Content.Find("ModuleWidget").gameObject;
+            var Content = GameObject.Find("ScrollSetup/ScrollRect/Content/ModuleWidget");
+            if (Content != null) Util.KDestroyGameObject(Content);
+
+            var Content2 = GameObject.Find("ScrollSetup/ScrollRect/Content");
+            moduleContentContainer = Content2;
+            modulePanelPrefab = GameObject.Find("ScrollSetup/ScrollRect/Content/ModuleWidget");
+
         }
 
         protected override void OnPrefabInit()
