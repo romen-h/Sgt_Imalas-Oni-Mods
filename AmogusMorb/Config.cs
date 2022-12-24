@@ -13,14 +13,13 @@ namespace AmogusMorb
     //[ConfigFile(SharedConfigLocation: true)]
     public class Config : SingletonOptions<Config>
     {
-        
-        [Option("Extra Sus", "crewmate")]
-        [JsonProperty]
-        public bool SussyPlus { get; set; }
 
+        [Option("Enable Old Suit", "insert tooltip")]
+        [JsonProperty]
+        public bool OldSuitMaker { get; set; }
         public Config()
         {
-            SussyPlus = true; 
+            OldSuitMaker = true;
         }
     }
 }
