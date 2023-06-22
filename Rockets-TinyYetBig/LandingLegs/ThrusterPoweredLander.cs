@@ -82,7 +82,7 @@ namespace Rockets_TinyYetBig.LandingLegs
 
 
 
-        public float currentVelocity = -10.0f; // 10 m/s
+        public float currentVelocity = -200.0f; // 10 m/s
         public float currentAcceleration = -9.81f; //-9.81 m/s^2
         public float landingSafetyMargin = 1.5f; // Reach minimum speed at 1.5 m altitude
         public float landingSpeed = -1f; // 1 m/s
