@@ -82,9 +82,9 @@ namespace Rockets_TinyYetBig.LandingLegs
 
 
 
-        public float currentVelocity = -10.0f; // 100 m/s
-        public float currentAcceleration = 9.81f; //9.81 m/s^2
-        public float landingSafetyMargin = 3f; // Soft landing starts at 3m altitude
+        public float currentVelocity = -10.0f; // 10 m/s
+        public float currentAcceleration = -9.81f; //-9.81 m/s^2
+        public float landingSafetyMargin = 1.5f; // Reach minimum speed at 1.5 m altitude
         public float landingSpeed = -1f; // 1 m/s
 
         public void LandingUpdate(float dt)
@@ -94,14 +94,23 @@ namespace Rockets_TinyYetBig.LandingLegs
 
             SgtLogger.l(string.Format("currentHeight: {0}, currentVelocity: {1}, currentAcceleration: {2}", flightAnimOffset, currentVelocity, currentAcceleration), "before");
 
-            // Landing computer can control acceleration directly, so imagine 
+            // Pretend there is a landing computer in the rocket.
+            // It can control acceleration directly because it can control the power coming out of the landing thruster.
+            // The control system has a target velocity it wants to keep the rocket at based on its height off the ground.
             float targetVelocity = -flightAnimOffset + landingSafetyMargin;
-            currentAcceleration = (targetVelocity - currentVelocity) / dt;
 
+            // The rocket needs to accelerate by the difference between how fast it is going and how fast it wants to go.
+            // There is a constant acceleration due to gravity that is being cancelled by the thruster, so this is a calculation of the *net* acceleration.
+            // If the thruster was disabled/broken/off this should be a constant -9.81 to implement freefall.
+            // If we wanted to be realistic then we would have to model the response time of the thruster too! A real rocket can't instantly modulate its output power.
+            currentAcceleration = (targetVelocity - currentVelocity);
+
+            // Velocity changes every frame by the acceleration (Yay calculus!)
             currentVelocity += currentAcceleration * dt;
             if (currentVelocity > landingSpeed)
                 currentVelocity = landingSpeed;
 
+            // Position changes every frame by the velocity (Yay 2nd order calculus!)
             flightAnimOffset += currentVelocity * dt;
             if (flightAnimOffset < 0)
                 flightAnimOffset = 0;
