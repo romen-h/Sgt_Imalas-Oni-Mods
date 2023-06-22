@@ -103,7 +103,7 @@ namespace Rockets_TinyYetBig.LandingLegs
             // There is a constant acceleration due to gravity that is being cancelled by the thruster, so this is a calculation of the *net* acceleration.
             // If the thruster was disabled/broken/off this should be a constant -9.81 to implement freefall.
             // If we wanted to be realistic then we would have to model the response time of the thruster too! A real rocket can't instantly modulate its output power.
-            currentAcceleration = (targetVelocity - currentVelocity);
+            currentAcceleration = (targetVelocity - currentVelocity) / dt;
 
             // Velocity changes every frame by the acceleration (Yay calculus!)
             currentVelocity += currentAcceleration * dt;
