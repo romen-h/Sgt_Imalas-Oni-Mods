@@ -97,13 +97,35 @@ namespace Rockets_TinyYetBig.LandingLegs
             // Pretend there is a landing computer in the rocket.
             // It can control acceleration directly because it can control the power coming out of the landing thruster.
             // The control system has a target velocity it wants to keep the rocket at based on its height off the ground.
-            float targetVelocity = -flightAnimOffset + landingSafetyMargin;
+
+            float h = flightAnimOffset - landingSafetyMargin; // Our "h" variable reaches 0 at some small distance above the ground
+
+            // Target Option 1: Speed towards ground linearly based on height
+            //float targetVelocity = -h;
+
+            // Target Option 2: Speed towards ground based on sqrt(height)
+            float targetVelocity = -Mathf.Sqrt(h);
+
+            // Target Option 3: Speed towards ground based on log(height)
+            // Make sure h i
+            //float targetVelocity = h > 1 ? -Mathgf.Log(h) - 1 : -1;
 
             // The rocket needs to accelerate by the difference between how fast it is going and how fast it wants to go.
             // There is a constant acceleration due to gravity that is being cancelled by the thruster, so this is a calculation of the *net* acceleration.
             // If the thruster was disabled/broken/off this should be a constant -9.81 to implement freefall.
             // If we wanted to be realistic then we would have to model the response time of the thruster too! A real rocket can't instantly modulate its output power.
-            currentAcceleration = (targetVelocity - currentVelocity) / dt;
+
+            // Control Option 1 : Decelerate based on just error.
+            // This one probably has a responsiveness lag, always about ~1s behind what speed it needs to be?
+            //currentAcceleration = (targetVelocity - currentVelocity);
+
+            // Control Option 2: Decelerate based on error, but divide by timestep to fix the error in just one timestep!
+            // This one is "perfect" and unrealistic, it will make the rocket move at the target Velocity every frame like it has perfect responsiveness.
+            //currentAcceleration = (targetVelocity - currentVelocity);
+
+            // Control Option 3: Decelerate based on proportion of error. Change the coefficient to tune responsiveness.
+            // This one probably makes the landing speed oscilliate, probably looks weird?
+            //currentAcceleration = 1.5 * (targetVelocity - currentVelocity);
 
             // Velocity changes every frame by the acceleration (Yay calculus!)
             currentVelocity += currentAcceleration * dt;
